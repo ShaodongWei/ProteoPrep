@@ -30,7 +30,7 @@ Optional parameters.
 # Run the script
 ```
 python scripts/preprocessing.py -h # check parameters to use
-python scripts/preprocessing.py --data data_input/data.tsv --metadata data_input/metadata.tsv --output test.tsv --log log2 --impute knn --batch_control plate
+python scripts/preprocessing.py --data data_in/data.tsv --metadata data_in/metadata.tsv --output_dir output  --log log2 --impute knn --batch_control plate --max_missing_sample 0.4
 ```
 
 
