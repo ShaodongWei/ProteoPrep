@@ -1,7 +1,7 @@
 # Install necessary packages
 ```
-python3 -m venv packages # make a local python environment
-source packages/bin/activate
+python3 -m venv preprocessing # make a local python environment
+source preprocessing/bin/activate
 pip install --upgrade pip
 pip install -r scripts/packages.txt
 ```
