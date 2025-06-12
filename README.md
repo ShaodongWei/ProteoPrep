@@ -17,7 +17,7 @@ Required parameters.
 --output_dir. Output directory where all results will be saved.  
 --max_missing_sample. The max allowed proportion of missing value in a sample. 
 --log. Log2 or log10 transformation of data. pseudo count is 1, or specified with --pseudo_count.
---impute. Impute missing value with 'knn' (5 neighbour), 'min', or 'pimms'.
+--impute. Impute missing value with 'knn' (10 neighbours), 'min', or 'pimms'.
 --batch_control. Specify the batch column in metadata, in order to remove batch effect using combat. 
 
 Optional parameters. 
