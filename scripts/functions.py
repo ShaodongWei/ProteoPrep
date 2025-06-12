@@ -11,10 +11,6 @@ from inmoose.pycombat import pycombat_norm
 from pimmslearn.sklearn.ae_transformer import AETransformer
 from sklearn.decomposition import PCA
 
-
-#from jinja2 import Template
-#from weasyprint import HTML
-
 # === Preprocessing Functions ===
 def load_data(data_path, metadata_path):
     data = pd.read_csv(data_path, sep='\t')
