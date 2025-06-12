@@ -8,8 +8,8 @@ pip install -r scripts/packages.txt
 # Parameters 
 ```
 Required parameters.
---data. Input dataframe, rows are samples and columns are features.
---metadata. A dataframe containing the batch information as a column
+--data. Input dataframe, rows are samples and columns are features. It has same index as metadata. 
+--metadata. A dataframe containing the batch information as a column. It has same index as data. 
 --output. Output file in tsv format. 
 --max_missing_sample. The max allowed proportion of missing value in a sample. 
 --log. Log2 or log10 transformation of data. pseudo count is 1, or specified with --pseudo_count.
