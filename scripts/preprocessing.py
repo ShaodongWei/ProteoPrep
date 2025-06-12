@@ -56,8 +56,8 @@ def preprocessing():
         data = scale(data, method=args.scale)
 
     # Save the cleaned data
-    data.index = metadata.iloc[data.index]['sample'].values  # Set index to sample names
-    data.index.name = 'sample'  # Name the index
+    # data.index = metadata.iloc[data.index]['sample'].values  # Set index to sample names
+    # data.index.name = 'sample'  # Name the index
     data = data.round(3)  # Round data to 3 decimal places
     data.to_csv(args.output, sep='\t', index=True)
 
