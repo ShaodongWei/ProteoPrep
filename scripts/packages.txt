@@ -1,0 +1,7 @@
+numpy<2.0 # pimms use numpy < 2.0
+argparse
+scikit-learn
+inmoose
+pimms-learn
+
+
