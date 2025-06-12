@@ -1,11 +1,11 @@
-# install necessary packages
+# Install necessary packages
 ```
 python3 -m venv packages # make a local python environment
 source packages/bin/activate
 pip install --upgrade pip
 pip install -r scripts/packages.txt
 ```
-# parameters 
+# Parameters 
 ```
 Required parameters.
 --data Input dataframe, rows are samples and columns are features.
@@ -23,7 +23,7 @@ Optional parameters.
 --scale Other than log, you can further scale with 'zscore' or 'pareto'. 
 ```
 
-# run the script
+# Run the script
 ```
 python scripts/preprocessing.py -h # check parameters to use
 python scripts/preprocessing.py --data data_in/data.tsv --metadata data_in/metadata.tsv --output test.tsv --log log2 --impute knn --batch_control plate
