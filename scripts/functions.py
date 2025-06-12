@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from inmoose.pycombat import pycombat_norm
 from pimmslearn.sklearn.ae_transformer import AETransformer
+from sklearn.decomposition import PCA
 
 
 #from jinja2 import Template
@@ -89,3 +90,20 @@ def remove_batch_effect(data, metadata, batch_col='plate'):
     else:
         data_corrected = pycombat_norm(counts=data.T, batch=batch).T
         return pd.DataFrame(data_corrected, index=data.index, columns=data.columns)
+
+
+def plot_pca(data, metadata, batch_col='plate', save_file='', title=''):
+    metadata = metadata.loc[data.index,:]
+    pca = PCA(n_components=2)
+    pca_result = pca.fit_transform(data.fillna(0)) 
+    pca_df = pd.DataFrame(data=pca_result, columns=['PC1', 'PC2'], index=data.index)
+    pca_df = pd.concat([pca_df, metadata[[batch_col]]], axis=1)
+    plt.figure(figsize=(10, 8))
+    sns.scatterplot(data=pca_df, x='PC1', y='PC2', hue=batch_col, style=batch_col, s=100)
+    plt.title(title)
+    plt.xlabel(f'PC 1 ({pca.explained_variance_ratio_[0]*100:.2f}%)')
+    plt.ylabel(f'PC 2 ({pca.explained_variance_ratio_[1]*100:.2f}%)')
+    plt.legend()
+    #plt.show()
+    plt.savefig(save_file)
+    plt.close()
