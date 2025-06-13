@@ -16,7 +16,7 @@ import os
 
 # === Main Pipeline ===
 def preprocessing():
-    parser = argparse.ArgumentParser(description="Preprocess and QC proteomics/metabolomics data")
+    parser = argparse.ArgumentParser(description="Preprocess and QC proteomics/metabolomics data", allow_abbrev=False)
     
     # required arguments
     parser.add_argument('--data', required=True, help='Input data')
