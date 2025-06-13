@@ -29,7 +29,7 @@ def preprocessing():
     
     # optional arguments
     parser.add_argument('--save_intermediate', action='store_true', help='Save intermediate results (default False)')
-    parser.add_argument('--plot_PCA', action='store_true', help='Plot the PCA and generate a PDF plot (default True).')
+    parser.add_argument('--plot_PCA', action='store_false', help='Not to produce PCA plot (default True).')
     parser.add_argument('--pseudo_count', type=float, default=1, help='Pseudo count for log transformation (default 1)')
     parser.add_argument('--normalize', choices=['median', 'quantile'], help='Normalization method')
     parser.add_argument('--scale', choices=['zscore', 'pareto'], help='Scaling method')
