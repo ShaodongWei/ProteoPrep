@@ -1,4 +1,4 @@
-# When to sue 
+# When to use
 This script is to preprocess proteomics or metabolomics raw data, where you can choose different methods to do quality control, missing value imputation, log transformation, batch effect removal, etc. 
 Besides, the script also generates PCA plot for data produced in each step to help you follow how data is processed. 
 
