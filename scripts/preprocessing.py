@@ -28,10 +28,12 @@ def preprocessing():
     parser.add_argument('--batch_control', required=True, help='Batch column name in metadata')
     
     # optional arguments
+    parser.add_argument('--save_intermediate', action='store_true', help='Save intermediate results (default False)')
+    parser.add_argument('--plot_PCA', action='store_true', help='Plot the PCA and generate a PDF plot (default True).')
     parser.add_argument('--pseudo_count', type=float, default=1, help='Pseudo count for log transformation (default 1)')
     parser.add_argument('--normalize', choices=['median', 'quantile'], help='Normalization method')
     parser.add_argument('--scale', choices=['zscore', 'pareto'], help='Scaling method')
-    parser.add_argument('--save_intermediate', action='store_true', help='Save intermediate results (default False)')
+    
     args = parser.parse_args()
 
     # Load data and metadata
@@ -61,21 +63,24 @@ def preprocessing():
     
     # Remove low quality data based on missing values
     data = remove_low_quality(data, missing_sample_thresh=args.max_missing_sample, missing_feature_thresh=1)
-    if args.plot:
+    if args.plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_QC.pdf'), title='PCA after removing low quality data')
 
     # required preprocessing steps
     # log transform data
     data = log_transform(data, pseudo_count=args.pseudo_count, method=args.log)
-    plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_log.pdf'), title='PCA after log transformation')
+    if args.plot_PCA:
+        plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_log.pdf'), title='PCA after log transformation')
 
     # impute missing values
     data = impute_missing(data, method=args.impute, save_intermediate=args.save_intermediate)
-    plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_missing_imputation.pdf'), title='PCA after missing value imputation')
+    if args.plot_PCA:
+        plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_missing_imputation.pdf'), title='PCA after missing value imputation')
 
     # Remove batch effects
     data = remove_batch_effect(data, metadata, batch_col=args.batch_control)
-    plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_batch_correction.pdf'), title='PCA after batch correction')
+    if args.plot_PCA:
+        plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_batch_correction.pdf'), title='PCA after batch correction')
 
     ## optional preprocessing steps
     # Normalize and scale data
