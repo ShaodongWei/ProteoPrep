@@ -63,23 +63,23 @@ def preprocessing():
     
     # Remove low quality data based on missing values
     data = remove_low_quality(data, missing_sample_thresh=args.max_missing_sample, missing_feature_thresh=1)
-    if not args.disable_plot_PCA:
+    if args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_QC.pdf'), title='PCA after removing low quality data')
 
     # required preprocessing steps
     # log transform data
     data = log_transform(data, pseudo_count=args.pseudo_count, method=args.log)
-    if not args.disable_plot_PCA:
+    if args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_log.pdf'), title='PCA after log transformation')
 
     # impute missing values
     data = impute_missing(data, method=args.impute, save_intermediate=args.save_intermediate)
-    if not args.disable_plot_PCA:
+    if args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_missing_imputation.pdf'), title='PCA after missing value imputation')
 
     # Remove batch effects
     data = remove_batch_effect(data, metadata, batch_col=args.batch_control)
-    if not args.disable_plot_PCA:
+    if args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_batch_correction.pdf'), title='PCA after batch correction')
 
     ## optional preprocessing steps
