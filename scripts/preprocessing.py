@@ -84,16 +84,16 @@ def preprocessing():
 
     # Save the cleaned data
     
-    args.output = os.path.join(args.output_dir, 'cleaned_data.tsv')
+    output_file = os.path.join(args.output_dir, 'cleaned_data.tsv')
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-    if os.path.exists(args.output):
-        print(f"Warning: Output file {args.output} already exists. It will be overwritten.")
+    if os.path.exists(output_file):
+        print(f"Warning: Output file {output_file} already exists. It will be overwritten.")
     data = data.round(3)
     data = data.reset_index(drop=True)
-    data.to_csv(args.output, sep='\t', index=True)
+    data.to_csv(output_file, sep='\t', index=True)
 
-    print("Preprocessing complete. Cleaned data saved to:", args.output)
+    print("Preprocessing complete. Cleaned data saved to:", output_file)
 
 if __name__ == '__main__':
     preprocessing()
