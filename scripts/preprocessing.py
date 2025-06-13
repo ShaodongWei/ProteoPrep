@@ -17,7 +17,7 @@ import os
 # === Main Pipeline ===
 def preprocessing():
     parser = argparse.ArgumentParser(description="Preprocess and QC proteomics/metabolomics data", allow_abbrev=False)
-    
+     
     # required arguments
     parser.add_argument('--data', required=True, help='Input data')
     parser.add_argument('--metadata', required=True, help='Metadata')
@@ -31,9 +31,12 @@ def preprocessing():
     parser.add_argument('--pseudo_count', type=float, default=1, help='Pseudo count for log transformation (default 1)')
     parser.add_argument('--normalize', choices=['median', 'quantile'], help='Normalization method')
     parser.add_argument('--scale', choices=['zscore', 'pareto'], help='Scaling method')
+    parser.add_argument('--save_intermediate', action='store_true', help='Save intermediate results (default False)')
     args = parser.parse_args()
 
     # Load data and metadata
+    os.listdir(os.getcwd())
+
     data, metadata = load_data(args.data, args.metadata)
     
     # Check if data and metadata are loaded correctly
@@ -66,7 +69,7 @@ def preprocessing():
     plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_log.pdf'), title='PCA after log transformation')
 
     # impute missing values
-    data = impute_missing(data, method=args.impute)
+    data = impute_missing(data, method=args.impute, save_intermediate=args.save_intermediate)
     plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_missing_imputation.pdf'), title='PCA after missing value imputation')
 
     # Remove batch effects
