@@ -85,7 +85,7 @@ def log_transform(data, pseudo_count, method='log2'):
 
 def normalize(data, method='median'):
     if method == 'median':
-        return data.divide(data.median(axis=1), axis=0)
+        return data.div(data.median(axis=1), axis=0)
     elif method == 'quantile':
         transformer = QuantileTransformer(output_distribution='normal', copy=True)
         return pd.DataFrame(transformer.fit_transform(data), index=data.index, columns=data.columns)
@@ -125,6 +125,5 @@ def plot_pca(data, metadata, batch_col='plate', save_file='', title=''):
     plt.xlabel(f'PC 1 ({pca.explained_variance_ratio_[0]*100:.2f}%)')
     plt.ylabel(f'PC 2 ({pca.explained_variance_ratio_[1]*100:.2f}%)')
     plt.legend()
-    #plt.show()
     plt.savefig(save_file)
     plt.close()
