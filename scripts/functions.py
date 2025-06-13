@@ -34,7 +34,7 @@ def impute_pimms(data):
     )
     model.fit(data,
             cuda=False,
-            epochs_max=20,
+            epochs_max=100,
             )
     return model.transform(data)
 
