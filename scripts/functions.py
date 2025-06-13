@@ -1,14 +1,15 @@
 import argparse
 import pandas as pd
 import numpy as np
-from sklearn.impute import KNNImputer
+import os 
+import shutil
 from sklearn.preprocessing import StandardScaler, QuantileTransformer
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
 from inmoose.pycombat import pycombat_norm
-from pimmslearn.sklearn.ae_transformer import AETransformer
+
 from sklearn.decomposition import PCA
 
 # === Preprocessing Functions ===
@@ -23,12 +24,13 @@ def remove_low_quality(data, missing_feature_thresh=1, missing_sample_thresh=0.4
     return data
 
 def impute_pimms(data):
+    from pimmslearn.sklearn.ae_transformer import AETransformer
     # use the Denoising or Variational Autoencoder
     model = AETransformer(
         model='DAE', # or 'VAE'
         hidden_layers=[512,],
-        latent_dim=data.shape[0], # dimension of joint sample and item embedding
-        batch_size=10,
+        #latent_dim=data.shape[0], # dimension of joint sample and item embedding
+        #batch_size=10,
     )
     model.fit(data,
             cuda=False,
@@ -36,19 +38,42 @@ def impute_pimms(data):
             )
     return model.transform(data)
 
-def impute_missing(data, method='knn'):
-    # remove all missing features 
-    data = data.dropna(axis=1, how='all')
-    if method == 'knn':
-        imputer = KNNImputer(n_neighbors=10)
-        return pd.DataFrame(imputer.fit_transform(data), index=data.index, columns=data.columns)
-    elif method == 'min':
-        return data.fillna(data.min().min())
-    elif method == 'pimms':
-        return impute_pimms(data)
-    else:
-        raise ValueError("Unsupported imputation method")
+def impute_missing(data, method='knn', save_intermediate=False):    
+    from sklearn.impute import KNNImputer
+    # save current working directory
+    old_dir = os.getcwd()
 
+    try:
+        # change working directory to intermediate 
+        impute_dir = os.path.join(os.getcwd(), 'intermediate')
+        if not os.path.exists(impute_dir):
+            os.makedirs(impute_dir, exist_ok=True)
+        os.chdir(impute_dir)
+        
+        # remove all missing features 
+        data = data.dropna(axis=1, how='all')
+        
+        # do imputation
+        if method == 'knn':
+            imputer = KNNImputer(n_neighbors=10)
+            result = pd.DataFrame(imputer.fit_transform(data), index=data.index, columns=data.columns)
+        elif method == 'min':
+            result = data.fillna(data.min().min())
+        elif method == 'pimms':
+            result = impute_pimms(data)
+        else:
+            raise ValueError("Unsupported imputation method")
+    finally:
+        os.chdir(old_dir)
+
+        # save intermediate results if required
+        if not save_intermediate:
+            shutil.rmtree(impute_dir, ignore_errors=True)
+
+    # return final result
+    return result
+    
+    
 def log_transform(data, pseudo_count, method='log2'):
     if method == 'log10':
         return np.log10(data + pseudo_count)
