@@ -21,7 +21,7 @@ Required parameters.
 --batch_control. Specify the batch column in metadata, in order to remove batch effect using combat. 
 
 Optional parameters. 
---plot. Plot the PCA and generate a PDF report (default True). 
+--plot_PCA. Plot the PCA and generate a PDF plot (default True). 
 --pseudo_count. Pseudo count for log transformation. 
 --normalize. Other than log, you can further normalize with 'quantile' or 'median'. 
 --scale. Other than log, you can further scale with 'zscore' or 'pareto'.
