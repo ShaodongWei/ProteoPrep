@@ -29,7 +29,7 @@ def preprocessing():
     
     # optional arguments
     parser.add_argument('--save_intermediate', action='store_true', help='Save intermediate results (default False)')
-    parser.add_argument('--plot_PCA', action='store_false', help='Not to produce PCA plot (default True).')
+    parser.add_argument('--disable_plot_PCA', action='store_false', help='Disable PCA plot (default show PCA plot).')
     parser.add_argument('--pseudo_count', type=float, default=1, help='Pseudo count for log transformation (default 1)')
     parser.add_argument('--normalize', choices=['median', 'quantile'], help='Normalization method')
     parser.add_argument('--scale', choices=['zscore', 'pareto'], help='Scaling method')
@@ -63,23 +63,23 @@ def preprocessing():
     
     # Remove low quality data based on missing values
     data = remove_low_quality(data, missing_sample_thresh=args.max_missing_sample, missing_feature_thresh=1)
-    if args.plot_PCA:
+    if not args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_QC.pdf'), title='PCA after removing low quality data')
 
     # required preprocessing steps
     # log transform data
     data = log_transform(data, pseudo_count=args.pseudo_count, method=args.log)
-    if args.plot_PCA:
+    if not args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_log.pdf'), title='PCA after log transformation')
 
     # impute missing values
     data = impute_missing(data, method=args.impute, save_intermediate=args.save_intermediate)
-    if args.plot_PCA:
+    if not args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_missing_imputation.pdf'), title='PCA after missing value imputation')
 
     # Remove batch effects
     data = remove_batch_effect(data, metadata, batch_col=args.batch_control)
-    if args.plot_PCA:
+    if not args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_batch_correction.pdf'), title='PCA after batch correction')
 
     ## optional preprocessing steps
