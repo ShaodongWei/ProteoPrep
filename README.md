@@ -4,8 +4,7 @@ Besides, the script also generates PCA plot for data produced in each step to he
 # Install necessary packages
 ```
 python3 -m venv preprocessing # make a local python environment
-source preprocessing/bin/activate (Linux)
-source preprocessing/Scripts/activate (Windows)
+source preprocessing/bin/activate
 pip install --upgrade pip
 pip install -r scripts/packages.txt
 ```
