@@ -100,7 +100,7 @@ def preprocessing():
         print(f"Warning: Output file {output_file} already exists. It will be overwritten.")
     data = data.round(3)
     data = data.reset_index(drop=True)
-    data.to_csv(output_file, sep='\t', index=True)
+    data.to_csv(output_file, sep='\t', index=False)
 
     print("Preprocessing complete. Cleaned data saved to:", output_file)
 
