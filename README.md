@@ -1,16 +1,14 @@
 # When to use
 This script is to preprocess proteomics or metabolomics raw data, where you can choose different methods to do quality control, missing value imputation, log transformation, batch effect removal, etc. 
 Besides, the script also generates PCA plot for data produced in each step to help you follow how data is processed. 
-[hehe](https://github.com/RasmussenLab/pimms)
 # Install necessary packages
 ```
 python3 -m venv preprocessing # make a local python environment
-source preprocessing/bin/activate (linux)
+source preprocessing/bin/activate (Linux)
 source preprocessing/Scripts/activate (Windows)
 pip install --upgrade pip
 pip install -r scripts/packages.txt
 ```
-# Parameters 
 # Parameters
 
 Required parameters:
