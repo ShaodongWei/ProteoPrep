@@ -38,8 +38,8 @@ python scripts/preprocessing.py --data data_input/data.tsv --metadata data_input
 ## Run interactively with your browser 
 
 ```
-streamlit run ./script/app.py
-nohup streamlit run ./scripts/app.py > streamlit.log 2>&1 & # you can close your terminal or browser, type the URL on the screen you will back to the interface. 
+streamlit run ./script/app.py # run it locally
+nohup streamlit run ./scripts/app.py > streamlit.log 2>&1 & # or run in background. You can close the terminal or browser, typing the URL to your broswer will get you back to the interface. 
 ```
 
 
