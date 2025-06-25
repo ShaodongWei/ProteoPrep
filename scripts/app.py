@@ -23,7 +23,6 @@ batch_col = st.text_input("Batch control column name", value="plate")
 pseudo_count = st.number_input("Pseudo count for log transform", value=1.0)
 normalize_method = st.selectbox("Normalization Method (optional)", [None, "median", "quantile"])
 scale_method = st.selectbox("Scaling Method (optional)", [None, "zscore", "pareto"])
-save_intermediate = st.checkbox("Save intermediate results", value=False)
 plot_pca = st.checkbox("Save PCA plots", value=True)
 
 if input_data and input_meta:
@@ -57,8 +56,6 @@ if input_data and input_meta:
                 cmd += ["--normalize", normalize_method]
             if scale_method:
                 cmd += ["--scale", scale_method]
-            if save_intermediate:
-                cmd += ["--save_intermediate"]
             if not plot_pca:
                 cmd += ["--disable_plot_PCA"]
 
