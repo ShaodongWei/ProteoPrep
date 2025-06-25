@@ -1,7 +1,5 @@
-numpy<2.0 # pimms use numpy < 2.0
-argparse
-scikit-learn
-inmoose
-pimms-learn
-
-
+inmoose=0.7.7
+pandas=2.3.0
+numpy=1.26.4
+pimms-learn=0.5.0
+scikit-learn=1.7.0
