@@ -39,7 +39,8 @@ python scripts/preprocessing.py --data data_input/data.tsv --metadata data_input
 
 ```
 streamlit run ./script/app.py # run it locally
-nohup streamlit run ./scripts/app.py > streamlit.log 2>&1 & # Or run in background. You can close the terminal or browser, typing the URL to your broswer will get you back to the interface. 
+nohup streamlit run ./scripts/app.py > streamlit.log 2>&1 & # Or run in background. You can close the terminal or browser, typing the URL to your broswer will get you back to the interface.
+ps aux | grep streamlit # show you the streamlit running in background 
 ```
 
 
