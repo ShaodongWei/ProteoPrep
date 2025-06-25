@@ -3,9 +3,8 @@ This script is to preprocess proteomics or metabolomics raw data, where you can 
 Besides, the script also generates PCA plot for data produced in each step to help you follow how data is processed. 
 # Install necessary packages
 ```
-python3 -m venv preprocessing # make a local python environment
-source preprocessing/bin/activate
-pip install --upgrade pip
+conda create -n ProteoPrep python=3.10
+conda activate ProteoPrep
 pip install -r scripts/packages.txt
 ```
 # Parameters
