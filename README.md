@@ -28,9 +28,17 @@ Optional parameters:
 - `--save_intermediate`: Save intermediate results (especially for pimms) (default: False).
 
 # Run the script
+
+## Command line 
 ```
 python scripts/preprocessing.py -h # check parameters to use
 python scripts/preprocessing.py --data data_input/data.tsv --metadata data_input/metadata.tsv --output_dir output  --log log2 --impute knn --batch_control plate --max_missing_sample 0.4
+```
+
+## Run interactively with your browser 
+
+```
+streamlit run ./script/app.py
 ```
 
 
