@@ -39,6 +39,7 @@ python scripts/preprocessing.py --data data_input/data.tsv --metadata data_input
 
 ```
 streamlit run ./script/app.py
+nohup streamlit run ./scripts/app.py > streamlit.log 2>&1 & # you can close your terminal or browser, type the URL on the screen you will back to the interface. 
 ```
 
 
