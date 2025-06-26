@@ -21,8 +21,6 @@ log_method = st.selectbox("Log Transformation", ["log2", "log10"])
 impute_method = st.selectbox("Imputation Method", ["pimms", "knn", "min"])
 batch_col = st.text_input("Batch control column name", value="plate")
 pseudo_count = st.number_input("Pseudo count for log transform", value=1.0)
-normalize_method = st.selectbox("Normalization Method (optional)", [None, "median", "quantile"])
-scale_method = st.selectbox("Scaling Method (optional)", [None, "zscore", "pareto"])
 plot_pca = st.checkbox("Save PCA plots", value=True)
 
 if input_data and input_meta:
@@ -52,10 +50,6 @@ if input_data and input_meta:
                 "--batch_control", batch_col,
                 "--pseudo_count", str(pseudo_count)
             ]
-            if normalize_method:
-                cmd += ["--normalize", normalize_method]
-            if scale_method:
-                cmd += ["--scale", scale_method]
             if not plot_pca:
                 cmd += ["--disable_plot_PCA"]
 
