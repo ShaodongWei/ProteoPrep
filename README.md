@@ -23,8 +23,6 @@ Optional parameters:
 
 - `--disable_plot_PCA`: Disable PCA plot (default: show PCA).
 - `--pseudo_count`: Pseudo count for log transformation.
-- `--normalize`: Normalize with [quantile](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.quantile_transform.html) or `'median'`.
-- `--scale`: Scale with `'zscore'` or `'pareto'`.
 - `--save_intermediate`: Save intermediate results (especially for pimms) (default: False).
 
 # Run the script
