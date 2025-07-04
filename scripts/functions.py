@@ -22,20 +22,58 @@ def remove_low_quality(data, missing_feature_thresh=1, missing_sample_thresh=0.4
     data = data.loc[data.isnull().mean(axis=1) < missing_sample_thresh, :]
     return data
 
-def impute_pimms(data):
+def impute_pimms(data, method='pimms_vae'):
     from pimmslearn.sklearn.ae_transformer import AETransformer
     # use the Denoising or Variational Autoencoder
-    model = AETransformer(
-        model='DAE', # or 'VAE'
-        hidden_layers=[512,],
-        #latent_dim=data.shape[0], # dimension of joint sample and item embedding
-        #batch_size=10,
-    )
-    model.fit(data,
+    if method == 'pimms_vae':
+        model = AETransformer(
+            model='VAE', # or 'DAE'
+            hidden_layers=[512,],
+            #latent_dim=data.shape[0], # dimension of joint sample and item embedding
+            #batch_size=10,
+        )
+        model.fit(data,
             cuda=False,
             epochs_max=100,
             )
-    return model.transform(data)
+        data_imputed = model.transform(data)
+    elif method == 'pimms_dae':
+        # use the Denoising Autoencoder
+        model = AETransformer(
+            model='DAE', # or 'VAE'
+            hidden_layers=[512,],
+            #latent_dim=data.shape[0], # dimension of joint sample and item embedding
+            #batch_size=10,
+        )
+        model.fit(data,
+            cuda=False,
+            epochs_max=100,
+            )
+        data_imputed = model.transform(data)
+    elif method == 'pimms_cft':
+        # use the Collaborative Filtering Transformer
+        from pimmslearn.sklearn.cf_transformer import CollaborativeFilteringTransformer
+        index_name = 'Sample ID'
+        column_name = 'protein group'
+        value_name = 'intensity'
+
+        data.index.name = index_name  # already set
+        data.columns.name = column_name  # not set due to csv disk file format
+
+        series = data.stack()
+        series.name = value_name
+
+        model = CollaborativeFilteringTransformer(
+            target_column=value_name,
+            sample_column=index_name,  # Sample ID
+            item_column=column_name
+            # n_factors=30, # dimension of separate sample and item embedding
+            # batch_size=4096
+        )
+        model.fit(series, cuda=False, epochs_max=100)
+        data_imputed = model.transform(series).unstack()
+
+    return data_imputed
 
 def impute_missing(data, method='knn', save_intermediate=False):    
     from sklearn.impute import KNNImputer
@@ -56,10 +94,8 @@ def impute_missing(data, method='knn', save_intermediate=False):
         if method == 'knn':
             imputer = KNNImputer(n_neighbors=10)
             result = pd.DataFrame(imputer.fit_transform(data), index=data.index, columns=data.columns)
-        elif method == 'min':
-            result = data.fillna(data.min().min())
-        elif method == 'pimms':
-            result = impute_pimms(data)
+        elif method.startswith('pimms'):
+            result = impute_pimms(data, method=method)
         else:
             raise ValueError("Unsupported imputation method")
     finally:
