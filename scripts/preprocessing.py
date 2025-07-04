@@ -22,7 +22,7 @@ def preprocessing():
     parser.add_argument('--output_dir', required=True, help='Output directory to save cleaned data')
     parser.add_argument('--max_missing_sample', default=0.4, type=float, help='Maximum fraction of missing values allowed per sample (default 0.4)')
     parser.add_argument('--log', required=True, choices=['log2', 'log10'], help='log transformation ')
-    parser.add_argument('--impute', required=True, choices=['pimms','knn', 'min'], help='Imputation method')
+    parser.add_argument('--impute', required=True, choices=['pimms_vae','pimms_dae','pimms_cft','knn'], help='Imputation method. Options: pimms (VAE, DAE, CollaborativeFilteringTransformer) or knn (10 neighbors)')
     parser.add_argument('--batch_control', required=True, help='Batch column name in metadata')
     
     # optional arguments
@@ -46,8 +46,8 @@ def preprocessing():
         raise ValueError(f"Batch control column '{args.batch_control}' not found in metadata. Please check the input files.")
     if args.log not in ['log2', 'log10']:
         raise ValueError(f"Log transformation method '{args.log}' is not supported. Choose 'log2' or 'log10'.")
-    if args.impute not in ['pimms', 'knn', 'min']:
-        raise ValueError(f"Imputation method '{args.impute}' is not supported. Choose 'pimms', 'knn', or 'min'.")
+    if args.impute not in ['pimms_vae','pimms_dae','pimms_cft', 'knn']:
+        raise ValueError(f"Imputation method '{args.impute}' is not supported. Choose 'pimms_vae','pimms_dae','pimms_cft', 'knn'")
     
     # Check if output directory exists, if not create it
     if not os.path.exists(args.output_dir):
