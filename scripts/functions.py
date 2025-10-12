@@ -22,6 +22,13 @@ def remove_low_quality(data, missing_feature_thresh=1, missing_sample_thresh=0.4
     data = data.loc[data.isnull().mean(axis=1) < missing_sample_thresh, :]
     return data
 
+def remove_outlier_sample(data, threshold=1.5):
+    protein_counts = data.notna().sum(axis=1)
+    q1, q3 = protein_counts.quantile([0.25,0.75])
+    lower_bound = q1 - threshold * (q3 - q1)
+    data = data.loc[protein_counts >= lower_bound,:]
+    return data
+
 def impute_pimms(data, method='pimms_vae'):
     from pimmslearn.sklearn.ae_transformer import AETransformer
     # use the Denoising or Variational Autoencoder
