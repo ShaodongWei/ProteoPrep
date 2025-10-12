@@ -13,8 +13,8 @@ from sklearn.decomposition import PCA
 
 # === Preprocessing Functions ===
 def load_data(data_path, metadata_path):
-    data = pd.read_csv(data_path, sep='\t')
-    metadata = pd.read_csv(metadata_path, sep='\t')
+    data = pd.read_csv(data_path, sep='\t', index_col=0)
+    metadata = pd.read_csv(metadata_path, sep='\t', index_col=0)
     return data, metadata
 
 def remove_low_quality(data, missing_feature_thresh=1, missing_sample_thresh=0.4):
