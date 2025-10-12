@@ -2,6 +2,7 @@
 from functions import (
     load_data,
     remove_low_quality,
+    remove_outlier_sample,
     impute_missing,
     log_transform,
     remove_batch_effect,
