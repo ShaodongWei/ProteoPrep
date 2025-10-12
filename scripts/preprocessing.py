@@ -55,6 +55,7 @@ def preprocessing():
     
     # Remove low quality data based on missing values
     data = remove_low_quality(data, missing_sample_thresh=args.max_missing_sample, missing_feature_thresh=1)
+    data = remove_outlier_sample(data, threshold=1.5)
     if args.disable_plot_PCA:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'pca_QC.pdf'), title='PCA after removing low quality data')
 
