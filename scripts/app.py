@@ -19,6 +19,7 @@ st.subheader("⚙️ Configure Parameters")
 max_missing = st.slider("Maximum missing values per sample", 0.0, 1.0, 0.4)
 log_method = st.selectbox("Log Transformation", ["log2", "log10"])
 impute_method = st.selectbox("Imputation Method", ["pimms_vae","pimms_dae","pimms_cft", "knn"])
+normalize_method = st.selectbox("Normalization Method", ["median", "quantile"])
 batch_col = st.text_input("Batch control column name", value="plate")
 pseudo_count = st.number_input("Pseudo count for log transform", value=1.0)
 plot_pca = st.checkbox("Save PCA plots", value=True)
@@ -47,6 +48,7 @@ if input_data and input_meta:
                 "--max_missing_sample", str(max_missing),
                 "--log", log_method,
                 "--impute", impute_method,
+                "--normalize", normalize_method,
                 "--batch_control", batch_col,
                 "--pseudo_count", str(pseudo_count)
             ]

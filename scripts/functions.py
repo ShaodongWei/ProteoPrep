@@ -13,6 +13,7 @@ from sklearn.decomposition import PCA
 
 # === Preprocessing Functions ===
 def load_data(data_path, metadata_path):
+    # rows are samples, columns are features
     data = pd.read_csv(data_path, sep='\t', index_col=0)
     metadata = pd.read_csv(metadata_path, sep='\t', index_col=0)
     return data, metadata
@@ -124,6 +125,30 @@ def log_transform(data, pseudo_count, method='log2'):
     else:
         raise ValueError("Unsupported log transformation method")
     
+def normalize(data, method='median'):
+    # rows are samples, columns are features
+    if method == 'median':
+        # Compute per-sample medians
+        sample_medians = data.median(axis=1)
+
+        # Compute global median (median of medians)
+        global_median = sample_medians.median()
+
+        # Compute scaling factors (so each sample is brought to global median)
+        scaling_factors = global_median / sample_medians
+
+        # Apply normalization
+        data_median_norm = data.multiply(scaling_factors, axis=0)
+
+        return data_median_norm
+    
+    elif method == 'quantile':
+        transformer = QuantileTransformer(output_distribution='normal', copy=True)
+        return pd.DataFrame(transformer.fit_transform(data), index=data.index, columns=data.columns)
+    else:
+        raise ValueError("Unsupported normalization method")
+
+
 
 def normalize(data, method='median'):
     if method == 'median':
