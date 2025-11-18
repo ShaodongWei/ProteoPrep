@@ -16,6 +16,7 @@ Required parameters:
 - `--output_dir`: Output directory where all results will be saved.  
 - `--max_missing_sample`: Max allowed proportion of missing value in a sample. 
 - `--log`: Log2 or log10 transformation of data. Pseudo count is 1, or set with `--pseudo_count`.
+- `--normalize`: Choose 'median' or 'quantile' for mormalization. 
 - `--impute`: Impute missing values with [knn](https://scikit-learn.org/stable/modules/impute.html), [pimms_vae, pimms_dae, pimms_cft](https://github.com/RasmussenLab/pimms). 
 - `--batch_control`: Specify the batch column in metadata to remove batch effect using [ComBat](https://github.com/epigenelabs/inmoose).
 
