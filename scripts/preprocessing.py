@@ -12,7 +12,7 @@ from functions import (
 
 import argparse
 import pandas as pd
-import os 
+import os
 
 # === Main Pipeline ===
 def preprocessing():
@@ -23,10 +23,10 @@ def preprocessing():
     parser.add_argument('--metadata', required=True, help='Metadata')
     parser.add_argument('--output_dir', required=True, help='Output directory to save cleaned data')
     parser.add_argument('--max_missing_sample', default=0.4, type=float, help='Maximum fraction of missing values allowed per sample (default 0.4)')
-    parser.add_argument('--normalize', required=True, choices=['median','quantile'], help='Normalization method')
+    parser.add_argument('--normalize', default=None, help='Normalization method')
     parser.add_argument('--log', required=True, choices=['log2', 'log10'], help='log transformation ')
     parser.add_argument('--impute', required=True, choices=['pimms_vae','pimms_dae','pimms_cft','knn'], help='Imputation method. Options: pimms (VAE, DAE, CollaborativeFilteringTransformer) or knn (10 neighbors)')
-    parser.add_argument('--batch_control', required=True, help='Batch column name in metadata')
+    parser.add_argument('--batch_control', default=None, help='Batch column name in metadata (optional)')
     
     # optional arguments
     parser.add_argument('--save_intermediate', action='store_true', help='Save intermediate results (default False)')
@@ -45,8 +45,11 @@ def preprocessing():
         raise ValueError("Data or metadata is empty. Please check the input files.")
     if data.shape[0] != metadata.shape[0]:
         raise ValueError("Number of samples in data and metadata do not match. Please check the input files.")
-    if args.batch_control not in metadata.columns:
-        raise ValueError(f"Batch control column '{args.batch_control}' not found in metadata. Please check the input files.")
+    if args.batch_control is not None:
+        if args.batch_control.strip() == "":
+            raise ValueError("Batch correction enabled but --batch_control is empty. Provide a metadata column name.")
+        if args.batch_control not in metadata.columns:
+            raise ValueError(f"Batch control column '{args.batch_control}' not found in metadata. Please check the input files.")
     if args.log not in ['log2', 'log10']:
         raise ValueError(f"Log transformation method '{args.log}' is not supported. Choose 'log2' or 'log10'.")
     if args.impute not in ['pimms_vae','pimms_dae','pimms_cft', 'knn']:
@@ -74,15 +77,17 @@ def preprocessing():
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step3_pca_missing_imputation.pdf'), title='PCA after missing value imputation')
 
     # normalize data
-    data = normalize(data, method=args.normalize)
-    if args.disable_plot_PCA:
-        plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step4_pca_normalization.pdf'), title='PCA after normalization')
+    if args.normalize:
+        data = normalize(data, method=args.normalize)
+        if args.disable_plot_PCA:
+            plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step4_pca_normalization.pdf'), title='PCA after normalization')
 
     # Remove batch effects
-    data = remove_batch_effect(data, metadata, batch_col=args.batch_control)
-    if args.disable_plot_PCA:
-        plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step5_pca_batch_correction.pdf'), title='PCA after batch correction')
-
+    if args.batch_control is not None:
+        data = remove_batch_effect(data, metadata, batch_col=args.batch_control)
+        if args.disable_plot_PCA:
+            plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step5_pca_batch_correction.pdf'), title='PCA after batch correction')
+    
     # Save the cleaned data
     output_file = os.path.join(args.output_dir, 'cleaned_data.tsv')
     if not os.path.exists(args.output_dir):
