@@ -5,7 +5,7 @@ Besides, the script also generates PCA plot for data produced in each step to he
 ```
 conda create -n ProteoPrep python=3.10 -y
 conda activate ProteoPrep
-pip install -r scripts/packages.txt
+python -m pip install -r scripts/packages.txt
 ```
 # Parameters
 
