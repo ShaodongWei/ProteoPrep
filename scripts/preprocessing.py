@@ -23,6 +23,7 @@ def preprocessing():
     #parser.add_argument('--metadata', required=True, help='Metadata')
     parser.add_argument('--metadata', default=None, help='Metadata (optional)')
     parser.add_argument('--output_dir', required=True, help='Output directory to save cleaned data')
+    parser.add_argument('--output_file', required=True, help='Output filename to save cleaned data')
     parser.add_argument('--max_missing_sample', default=0.4, type=float, help='Maximum fraction of missing values allowed per sample (default 0.4)')
     parser.add_argument('--normalize', default=None, help='Normalization method')
     parser.add_argument('--log', required=True, choices=['log2', 'log10'], help='log transformation ')
@@ -98,16 +99,19 @@ def preprocessing():
             plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step5_pca_batch_correction.pdf'), title='PCA after batch correction')
     
     # Save the cleaned data
-    output_file = os.path.join(args.output_dir, "cleaned_data.tsv")
+    # in_file = os.path.basename(args.data)
+    # stem_file = os.path.splitext(in_file)[1]
+    #output_file = os.path.join(args.output_dir, "cleaned_data.tsv")
+    # output_file = os.path.join(args.output_dir, f"cleaned_{stem_file}.tsv")
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-    if os.path.exists(output_file):
-        print(f"Warning: Output file {output_file} already exists. It will be overwritten.")
+    if os.path.exists(args.output_file):
+        print(f"Warning: Output file {args.output_file} already exists. It will be overwritten.")
     data = data.round(3)
     #data = data.reset_index(drop=True)
-    data.to_csv(output_file, sep='\t', index=True)
+    data.to_csv(args.output_file, sep='\t', index=True)
 
-    print("Preprocessing complete. Cleaned data saved to:", output_file)
+    print("Preprocessing complete. Cleaned data saved to:", args.output_file)
 
 if __name__ == '__main__':
     preprocessing()
