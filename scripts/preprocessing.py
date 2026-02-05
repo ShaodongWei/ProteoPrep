@@ -20,7 +20,8 @@ def preprocessing():
      
     # required arguments
     parser.add_argument('--data', required=True, help='Input data')
-    parser.add_argument('--metadata', required=True, help='Metadata')
+    #parser.add_argument('--metadata', required=True, help='Metadata')
+    parser.add_argument('--metadata', default=None, help='Metadata (optional)')
     parser.add_argument('--output_dir', required=True, help='Output directory to save cleaned data')
     parser.add_argument('--max_missing_sample', default=0.4, type=float, help='Maximum fraction of missing values allowed per sample (default 0.4)')
     parser.add_argument('--normalize', default=None, help='Normalization method')
@@ -41,17 +42,25 @@ def preprocessing():
     data, metadata = load_data(args.data, args.metadata)
     
     # Check if data and metadata are loaded correctly
-    if data.empty or metadata.empty:
-        raise ValueError("Data or metadata is empty. Please check the input files.")
-    if data.shape[0] != metadata.shape[0]:
-        raise ValueError("Number of samples in data and metadata do not match. Please check the input files.")
+    if data is None or data.empty:
+        raise ValueError("Data is empty. Please check the input file.")
+
+    # Only validate metadata if it was provided
+    if metadata is not None:
+        if metadata.empty:
+            raise ValueError("Metadata is empty. Please check the metadata file.")
+        if data.shape[0] != metadata.shape[0]:
+            raise ValueError("Number of samples in data and metadata do not match. Please check the input files.")
+    # check batch control 
     if args.batch_control is not None:
         if args.batch_control.strip() == "":
             raise ValueError("Batch correction enabled but --batch_control is empty. Provide a metadata column name.")
         if args.batch_control not in metadata.columns:
             raise ValueError(f"Batch control column '{args.batch_control}' not found in metadata. Please check the input files.")
+    # check transformation 
     if args.log not in ['log2', 'log10']:
         raise ValueError(f"Log transformation method '{args.log}' is not supported. Choose 'log2' or 'log10'.")
+    # check imputation method 
     if args.impute not in ['pimms_vae','pimms_dae','pimms_cft', 'knn']:
         raise ValueError(f"Imputation method '{args.impute}' is not supported. Choose 'pimms_vae','pimms_dae','pimms_cft', 'knn'")
     
@@ -62,34 +71,34 @@ def preprocessing():
     # Remove low quality data based on missing values
     data = remove_low_quality(data, missing_sample_thresh=args.max_missing_sample, missing_feature_thresh=1)
     data = remove_outlier_sample(data, threshold=1.5)
-    if args.disable_plot_PCA:
+    if args.disable_plot_PCA and metadata is not None:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step1_pca_QC.pdf'), title='PCA after removing low quality data')
 
     # required preprocessing steps
     # log transform data
     data = log_transform(data, pseudo_count=args.pseudo_count, method=args.log)
-    if args.disable_plot_PCA:
+    if args.disable_plot_PCA and metadata is not None:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step2_pca_log.pdf'), title='PCA after log transformation')
 
     # impute missing values
     data = impute_missing(data, method=args.impute, save_intermediate=args.save_intermediate)
-    if args.disable_plot_PCA:
+    if args.disable_plot_PCA and metadata is not None:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step3_pca_missing_imputation.pdf'), title='PCA after missing value imputation')
 
     # normalize data
     if args.normalize:
         data = normalize(data, method=args.normalize)
-        if args.disable_plot_PCA:
+        if args.disable_plot_PCA and metadata is not None:
             plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step4_pca_normalization.pdf'), title='PCA after normalization')
 
     # Remove batch effects
     if args.batch_control is not None:
         data = remove_batch_effect(data, metadata, batch_col=args.batch_control)
-        if args.disable_plot_PCA:
+        if args.disable_plot_PCA and metadata is not None:
             plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step5_pca_batch_correction.pdf'), title='PCA after batch correction')
     
     # Save the cleaned data
-    output_file = os.path.join(args.output_dir, 'cleaned_data.tsv')
+    output_file = os.path.join(args.output_dir, "cleaned_data.tsv")
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
     if os.path.exists(output_file):
