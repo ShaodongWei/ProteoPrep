@@ -14,8 +14,10 @@ from sklearn.decomposition import PCA
 # === Preprocessing Functions ===
 def load_data(data_path, metadata_path):
     # rows are samples, columns are features
-    data = pd.read_csv(data_path, sep='\t', index_col=0)
-    metadata = pd.read_csv(metadata_path, sep='\t', index_col=0)
+    data = pd.read_csv(data_path, sep=None, index_col=0)
+    metadata = None
+    if metadata_path:
+        metadata = pd.read_csv(metadata_path, sep=None, index_col=0)
     return data, metadata
 
 def remove_low_quality(data, missing_feature_thresh=1, missing_sample_thresh=0.4):
@@ -147,7 +149,6 @@ def normalize(data, method='median'):
         return pd.DataFrame(transformer.fit_transform(data), index=data.index, columns=data.columns)
     else:
         raise ValueError("Unsupported normalization method")
-
 
 
 def normalize(data, method='median'):
