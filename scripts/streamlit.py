@@ -76,12 +76,18 @@ if run_clicked:
                 meta_path = f2.name
 
         output_dir = tempfile.mkdtemp()
+        
+        # Create output filename: cleaned_<original_name>.tsv
+        base_name = os.path.splitext(input_data.name)[0] 
+        output_cleaned_name = f"cleaned_{base_name}.tsv"
+        output_file = os.path.join(output_dir, output_cleaned_name)
 
         # Build command (IMPORTANT: preprocessing.py must accept optional --metadata)
         cmd = [
             "python", "./scripts/preprocessing.py",
             "--data", data_path,
             "--output_dir", output_dir,
+            "--output_file", output_file,
             "--max_missing_sample", str(max_missing),
             "--log", log_method,
             "--impute", impute_method,
@@ -113,7 +119,6 @@ if run_clicked:
             st.stop()
 
         # Load and show output
-        output_file = os.path.join(output_dir, "cleaned_data.tsv")
         if not os.path.exists(output_file):
             st.error("Output file not found. Check script output below:")
             st.code(result.stdout)
@@ -127,7 +132,7 @@ if run_clicked:
         st.download_button(
             label="📥 Download Cleaned Data (TSV)",
             data=df_out.to_csv(sep="\t", index=False).encode("utf-8"),
-            file_name="cleaned_data.tsv",
+            file_name=output_cleaned_name,
             mime="text/tsv",
         )
 
