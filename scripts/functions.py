@@ -20,9 +20,8 @@ def load_data(data_path, metadata_path):
         metadata = pd.read_csv(metadata_path, sep=None, index_col=0)
     return data, metadata
 
-def remove_low_quality(data, missing_feature_thresh=1, missing_sample_thresh=0.4):
-    data = data.loc[:, data.isnull().mean() < missing_feature_thresh]
-    data = data.loc[data.isnull().mean(axis=1) < missing_sample_thresh, :]
+def remove_low_quality(data, missing_feature_thresh=0.4):
+    data = data.loc[:, data.isnull().mean() <= missing_feature_thresh]
     return data
 
 def remove_outlier_sample(data, threshold=1.5):
