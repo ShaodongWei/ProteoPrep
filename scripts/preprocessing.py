@@ -24,7 +24,7 @@ def preprocessing():
     parser.add_argument('--metadata', default=None, help='Metadata (optional)')
     parser.add_argument('--output_dir', required=True, help='Output directory to save cleaned data')
     parser.add_argument('--output_file', required=True, help='Output filename to save cleaned data')
-    parser.add_argument('--max_missing_sample', default=0.4, type=float, help='Maximum fraction of missing values allowed per sample (default 0.4)')
+    parser.add_argument('--max_missing_feature', default=0.4, type=float, help='Maximum fraction of missing values allowed per feature (default 0.4)')
     parser.add_argument('--normalize', default=None, help='Normalization method')
     parser.add_argument('--log', required=True, choices=['log2', 'log10'], help='log transformation ')
     parser.add_argument('--impute', required=True, choices=['pimms_vae','pimms_dae','pimms_cft','knn'], help='Imputation method. Options: pimms (VAE, DAE, CollaborativeFilteringTransformer) or knn (10 neighbors)')
@@ -70,7 +70,7 @@ def preprocessing():
         os.makedirs(args.output_dir)
     
     # Remove low quality data based on missing values
-    data = remove_low_quality(data, missing_sample_thresh=args.max_missing_sample, missing_feature_thresh=1)
+    data = remove_low_quality(data, missing_feature_thresh=args.max_missing_feature)
     data = remove_outlier_sample(data, threshold=1.5)
     if args.disable_plot_PCA and metadata is not None:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step1_pca_QC.pdf'), title='PCA after removing low quality data')
