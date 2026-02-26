@@ -11,7 +11,7 @@ python -m pip install -r scripts/packages.txt
 
 Required parameters:
 
-- `--data`: Input dataframe, rows are samples and columns are features.
+- `--data`: Input table, tsv format, rows are samples and columns are features, sample id is the first column.
 - `--metadata`: A dataframe containing the batch information as a column.
 - `--output_dir`: Output directory where all results will be saved.  
 - `--max_missing_sample`: Max allowed proportion of missing value in a sample. 
