@@ -20,7 +20,7 @@ input_data = st.file_uploader("Upload proteomics data (CSV/TSV)", type=["csv", "
 # =========================
 st.subheader("⚙️ Configure Parameters")
 
-max_missing = st.slider("Maximum missing values per sample", 0.0, 1.0, 0.4)
+max_missing = st.slider("Maximum missing values per feature", 0.0, 1.0, 0.4)
 log_method = st.selectbox("Log Transformation", ["log2", "log10"])
 impute_method = st.selectbox("Imputation Method", ["pimms_vae", "pimms_dae", "pimms_cft", "knn"])
 normalize_method = st.selectbox("Normalization Method", ["median", "quantile", "None"])
