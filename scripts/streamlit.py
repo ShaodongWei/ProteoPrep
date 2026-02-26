@@ -88,7 +88,7 @@ if run_clicked:
             "--data", data_path,
             "--output_dir", output_dir,
             "--output_file", output_file,
-            "--max_missing_sample", str(max_missing),
+            "--max_missing_feature", str(max_missing),
             "--log", log_method,
             "--impute", impute_method,
             "--pseudo_count", str(pseudo_count),
