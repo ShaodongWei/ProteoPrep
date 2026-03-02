@@ -14,7 +14,7 @@ from sklearn.decomposition import PCA
 # === Preprocessing Functions ===
 def load_data(data_path, metadata_path):
     # rows are samples, columns are features
-    data = pd.read_csv(data_path, sep='\t', index_col=0)
+    data = pd.read_csv(data_path, sep='\t', index_col=0, na_values=["NA","NaN","N/A","", "null","NULL","None","none",".","-"])
     metadata = None
     if metadata_path:
         metadata = pd.read_csv(metadata_path, sep='\t', index_col=0)
