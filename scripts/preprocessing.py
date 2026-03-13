@@ -80,17 +80,17 @@ def preprocessing():
     data = log_transform(data, pseudo_count=args.pseudo_count, method=args.log)
     if args.disable_plot_PCA and metadata is not None:
         plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step2_pca_log.pdf'), title='PCA after log transformation')
-
-    # impute missing values
-    data = impute_missing(data, method=args.impute, save_intermediate=args.save_intermediate)
-    if args.disable_plot_PCA and metadata is not None:
-        plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step3_pca_missing_imputation.pdf'), title='PCA after missing value imputation')
-
+    
     # normalize data
     if args.normalize:
         data = normalize(data, method=args.normalize)
         if args.disable_plot_PCA and metadata is not None:
             plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step4_pca_normalization.pdf'), title='PCA after normalization')
+            
+    # impute missing values
+    data = impute_missing(data, method=args.impute, save_intermediate=args.save_intermediate)
+    if args.disable_plot_PCA and metadata is not None:
+        plot_pca(data, metadata, batch_col='plate', save_file=os.path.join(args.output_dir, 'step3_pca_missing_imputation.pdf'), title='PCA after missing value imputation')
 
     # Remove batch effects
     if args.batch_control is not None:
