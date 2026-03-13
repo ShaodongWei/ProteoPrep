@@ -22,8 +22,8 @@ st.subheader("⚙️ Configure Parameters")
 
 max_missing = st.slider("Maximum missing values per feature", 0.0, 1.0, 0.4)
 log_method = st.selectbox("Log Transformation", ["log2", "log10"])
-impute_method = st.selectbox("Imputation Method", ["pimms_vae", "pimms_dae", "pimms_cft", "knn"])
 normalize_method = st.selectbox("Normalization Method", ["median", "quantile", "None"])
+impute_method = st.selectbox("Imputation Method", ["pimms_vae", "pimms_dae", "pimms_cft", "knn"])
 pseudo_count = st.number_input("Pseudo count for log transform", value=1.0)
 
 plot_pca = st.checkbox("Save PCA plots", value=True)
